@@ -161,9 +161,10 @@ public class Simulator {
 
                 Location newLocation = healthyHuman.getLocation();
                 healthyHuman.clearPosition();
-                SickHuman sickHuman = new SickHuman(false, newField, newLocation,true);
+                SickHuman sickHuman = new SickHuman(false, newField, newLocation,false);
                 sickHuman.setAge(newAge);
                 sickHumen.add(sickHuman);
+                sickHuman.setInQuarantine(true);
             }
         }
         for (Iterator<SickHuman> it = sickHumen.iterator(); it.hasNext(); ) {
