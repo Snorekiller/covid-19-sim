@@ -46,17 +46,12 @@ public class Simulator {
     private boolean borderActive;
     private boolean ageDeadlyness;
     private boolean quaranteen;
-    private boolean freemode;
 
     /**
      * Construct a simulation field with default size.
      */
-    public Simulator(boolean borders, boolean ageDeath,boolean quaranteens, boolean freemodes) throws IOException {
-        this(DEFAULT_DEPTH, DEFAULT_WIDTH);
-        borderActive = borders;
-        ageDeadlyness = ageDeath;
-        quaranteen = quaranteens;
-        freemode = freemodes;
+    public Simulator(boolean borders, boolean ageDeath,boolean quaranteens) throws IOException {
+        this(DEFAULT_DEPTH, DEFAULT_WIDTH, borders,  ageDeath, quaranteens);
     }
 
     /**
@@ -65,13 +60,16 @@ public class Simulator {
      * @param depth Depth of the field. Must be greater than zero.
      * @param width Width of the field. Must be greater than zero.
      */
-    public Simulator(int depth, int width) throws IOException {
+    public Simulator(int depth, int width, boolean activeBorders, boolean ageDeath,boolean quaranteens) throws IOException {
         if (width <= 0 || depth <= 0) {
             System.out.println("The dimensions must be >= zero.");
             System.out.println("Using default values.");
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
+        borderActive = activeBorders;
+        ageDeadlyness = ageDeath;
+        quaranteen = quaranteens;
 
         //   logger = new WriteLogEntriesToLogFile();
         healthyHumen = new ArrayList<>();
