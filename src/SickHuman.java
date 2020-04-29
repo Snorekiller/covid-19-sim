@@ -57,8 +57,9 @@ public class SickHuman extends Human {
             if (newLocation == null) {
                 newLocation = getField().freeAdjacentLocation(getLocation());
             }
+            Object border = getField().getObjectAt(newLocation);
             // See if it was possible to move.
-            if (newLocation != null) {
+            if (newLocation != null && !(border instanceof Borders)) {
                 setLocation(newLocation);
             } else {
             }

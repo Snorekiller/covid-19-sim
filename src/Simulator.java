@@ -1,3 +1,5 @@
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.io.IOException;
 import java.util.Random;
 import java.util.List;
@@ -29,13 +31,14 @@ public class Simulator {
     public List<SickHuman> sickHumen;
     public List<CuredHuman> curedHumen;
     public List<DeadHumans> deadHumens;
+    public List<Borders> borders;
     // The current state of the field.
     private Field field;
     // The current step of the simulation.
     private int step;
     // A graphical view of the simulation.
     private SimulatorView view;
-    private int numberOfDeaths=0;
+
 
     // private WriteLogEntriesToLogFile logger;
 
@@ -64,6 +67,7 @@ public class Simulator {
         sickHumen = new ArrayList<>();
         curedHumen = new ArrayList<>();
         deadHumens = new ArrayList<>();
+        borders = new ArrayList<>();
         field = new Field(depth, width);
 
         // Create a view of the state of each location in the field.
@@ -71,7 +75,7 @@ public class Simulator {
         view.setColor(HealthyHuman.class, Color.DARK_GRAY);
         view.setColor(CuredHuman.class, Color.GREEN);
         view.setColor(SickHuman.class, Color.RED);
-
+        view.setColor(Border.class,Color.BLACK);
         // Setup a valid starting point.
         reset();
     }
@@ -131,7 +135,7 @@ public class Simulator {
                 deadHumens.add(deadHumans);
                 view.setDead();
             }
-            if(sickHuman.isCured()){
+            if((sickHuman.isCured()) && (sickHuman.isAlive())){
                 it.remove();
                 Field newField = sickHuman.getField();
                 Location newLocation = sickHuman.getLocation();
@@ -174,7 +178,13 @@ public class Simulator {
         field.clear();
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
-                if (rand.nextDouble() <= HealthyHumans) {
+                if(col == 10){
+                    Location location = new Location(row, col);
+                    Borders border = new Borders(field,location);
+                    borders.add(border);
+                    field.place(border,row,col);
+                }
+                else if (rand.nextDouble() <= HealthyHumans) {
                     Location location = new Location(row, col);
                     HealthyHuman healthyHuman = new HealthyHuman(true, field, location);
                     healthyHumen.add(healthyHuman);

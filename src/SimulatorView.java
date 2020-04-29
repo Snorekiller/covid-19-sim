@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,6 +28,7 @@ public class SimulatorView extends JFrame
     private final String DEADPOPULATION_PREFIX = "Number of dead: ";
     private JLabel stepLabel, population, deadPopulation;
     private FieldView fieldView;
+
     
     // A map for storing colors for participants in the simulation
     private Map<Class, Color> colors;
@@ -42,6 +45,7 @@ public class SimulatorView extends JFrame
     {
         stats = new FieldStats();
         colors = new LinkedHashMap<>();
+
 
         setTitle("Covid 19 Simulation");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
