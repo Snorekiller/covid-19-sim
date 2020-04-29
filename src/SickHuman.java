@@ -13,11 +13,12 @@ public class SickHuman extends Human {
 
     // Individual characteristics (instance fields).
     public int timeSick = 0;
-    public int timeToCured = 60;
+    public int timeToCured = 100;
     // The human's age.
     public int age;
 
-    private double chanceOfDeath=0.004;
+   // private double chanceOfDeath=0.004 + (age/10000);
+    private double chanceOfDeath = getChanceOfDeath();
 
     /**
      * Create a human. A human can be created as a new born (age zero
@@ -44,7 +45,8 @@ public class SickHuman extends Human {
 
     public void checkIfDead(){
      //   double prob = manDeathTable[age];
-        if( Math.random() < chanceOfDeath )
+        //if( Math.random() < chanceOfDeath )
+        if( Math.random() < getChanceOfDeath() )
             setDead();
     }
 
@@ -101,5 +103,26 @@ public class SickHuman extends Human {
 
     public void setAge(int newAge){
         age = newAge;
+    }
+
+    public double getChanceOfDeath(){
+        double age = getAge();
+        double chanceOfDeath =0;
+        if(age <10){
+            chanceOfDeath = 0;
+        }
+        if(age > 10 && age <20){
+            chanceOfDeath = 0.00005;
+        }
+        if(age > 20 && age < 40){
+            chanceOfDeath = 0.0001;
+        }
+        if(age > 40 && age < 70){
+            chanceOfDeath = 0.0005;
+        }
+        if(age > 70){
+            chanceOfDeath = 0.001;
+        }
+        return chanceOfDeath;
     }
 }
