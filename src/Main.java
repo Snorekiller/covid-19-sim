@@ -3,7 +3,12 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String args[]) throws InterruptedException, IOException {
-        Simulator simulator = new Simulator();
+        // set parameters of simulation
+        boolean borders = true;
+        boolean ageDeadlyness = false;
+        boolean quaranten = false;
+        boolean freemode = true;
+        Simulator simulator = new Simulator(borders,ageDeadlyness, quaranten, freemode);
         simulator.runLongSimulation();
 
         simulator.reset();

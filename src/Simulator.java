@@ -43,12 +43,20 @@ public class Simulator {
 
     private int colons;
     // private WriteLogEntriesToLogFile logger;
+    private boolean borderActive;
+    private boolean ageDeadlyness;
+    private boolean quaranteen;
+    private boolean freemode;
 
     /**
      * Construct a simulation field with default size.
      */
-    public Simulator() throws IOException {
+    public Simulator(boolean borders, boolean ageDeath,boolean quaranteens, boolean freemodes) throws IOException {
         this(DEFAULT_DEPTH, DEFAULT_WIDTH);
+        borderActive = borders;
+        ageDeadlyness = ageDeath;
+        quaranteen = quaranteens;
+        freemode = freemodes;
     }
 
     /**
@@ -64,6 +72,7 @@ public class Simulator {
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
+
         //   logger = new WriteLogEntriesToLogFile();
         healthyHumen = new ArrayList<>();
         sickHumen = new ArrayList<>();
@@ -111,7 +120,7 @@ public class Simulator {
     public void simulateOneStep() {
         step++;
         //     logger.simulatorStep(Integer.toString(step));
-        if (step ==30* BordersRemoved){
+        if ((step ==30* BordersRemoved)&&(borderActive)){
             BordersRemoved ++;
             int newcolon = colons/2;
             int lowerColon = newcolon-BordersRemoved;
@@ -127,7 +136,7 @@ public class Simulator {
 
             }
         }
-        // Let all rabbits act.
+
         for (Iterator<HealthyHuman> it = healthyHumen.iterator(); it.hasNext(); ) {
             HealthyHuman healthyHuman = it.next();
             healthyHuman.move();
@@ -195,7 +204,7 @@ public class Simulator {
         field.clear();
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
-                if(col == BorderPlacement){
+                if((col == BorderPlacement)&&(borderActive)){
                     Location location = new Location(row, col);
                     Borders border = new Borders(field,location);
                     borders.add(border);
