@@ -24,12 +24,15 @@ public class Simulator {
     // The probability that a rabbit will be created in any given position.
     private static final double HealthyHumans = 0.08;
 
+    private static final double InQuarantine = 0.7;
+
     private static final int BorderPlacement = 15;
 
     private int BordersRemoved = 1;
 
     // Lists of animals in the field.
     public List<HealthyHuman> healthyHumen;
+    public List<Human> quaranteens;
     public List<SickHuman> sickHumen;
     public List<CuredHuman> curedHumen;
     public List<DeadHumans> deadHumens;
@@ -45,13 +48,13 @@ public class Simulator {
     // private WriteLogEntriesToLogFile logger;
     private boolean borderActive;
     private boolean ageDeadlyness;
-    private boolean quaranteen;
+    private boolean quarantine;
 
     /**
      * Construct a simulation field with default size.
      */
-    public Simulator(boolean borders, boolean ageDeath,boolean quaranteens) throws IOException {
-        this(DEFAULT_DEPTH, DEFAULT_WIDTH, borders,  ageDeath, quaranteens);
+    public Simulator(boolean borders, boolean ageDeath,boolean quarantines) throws IOException {
+        this(DEFAULT_DEPTH, DEFAULT_WIDTH, borders,  ageDeath, quarantines);
     }
 
     /**
@@ -60,7 +63,7 @@ public class Simulator {
      * @param depth Depth of the field. Must be greater than zero.
      * @param width Width of the field. Must be greater than zero.
      */
-    public Simulator(int depth, int width, boolean activeBorders, boolean ageDeath,boolean quaranteens) throws IOException {
+    public Simulator(int depth, int width, boolean activeBorders, boolean ageDeath,boolean quarantines) throws IOException {
         if (width <= 0 || depth <= 0) {
             System.out.println("The dimensions must be >= zero.");
             System.out.println("Using default values.");
@@ -69,7 +72,7 @@ public class Simulator {
         }
         borderActive = activeBorders;
         ageDeadlyness = ageDeath;
-        quaranteen = quaranteens;
+        quarantine = quarantines;
 
         //   logger = new WriteLogEntriesToLogFile();
         healthyHumen = new ArrayList<>();
@@ -82,6 +85,7 @@ public class Simulator {
         // Create a view of the state of each location in the field.
         view = new SimulatorView(depth, width);
         view.setColor(HealthyHuman.class, Color.DARK_GRAY);
+
         view.setColor(CuredHuman.class, Color.GREEN);
         view.setColor(SickHuman.class, Color.RED);
         view.setColor(Border.class,Color.BLACK);
@@ -137,21 +141,38 @@ public class Simulator {
 
         for (Iterator<HealthyHuman> it = healthyHumen.iterator(); it.hasNext(); ) {
             HealthyHuman healthyHuman = it.next();
-            healthyHuman.move();
+            int newAge = healthyHuman.getAge();
+            boolean quarantined = healthyHuman.isInQuarantine();
+            if (!healthyHuman.isInQuarantine()){
+                healthyHuman.move();
+            }
             if((healthyHuman.isSick())&&(!healthyHuman.isCured())){
                 it.remove();
                 Field newField = healthyHuman.getField();
+
                 Location newLocation = healthyHuman.getLocation();
-                int newAge = healthyHuman.getAge();
                 healthyHuman.clearPosition();
-                SickHuman sickHuman = new SickHuman(false, newField, newLocation);
+                SickHuman sickHuman = new SickHuman(false, newField, newLocation,false);
+                sickHuman.setAge(newAge);
+                sickHumen.add(sickHuman);
+            }else if((healthyHuman.isSick())&&(!healthyHuman.isCured())&&(quarantined)){
+                it.remove();
+                Field newField = healthyHuman.getField();
+
+                Location newLocation = healthyHuman.getLocation();
+                healthyHuman.clearPosition();
+                SickHuman sickHuman = new SickHuman(false, newField, newLocation,true);
                 sickHuman.setAge(newAge);
                 sickHumen.add(sickHuman);
             }
         }
         for (Iterator<SickHuman> it = sickHumen.iterator(); it.hasNext(); ) {
             SickHuman sickHuman = it.next();
-            sickHuman.move();
+            int newAge = sickHuman.getAge();
+            boolean quarantined = sickHuman.isInQuarantine();
+            if (!sickHuman.isInQuarantine()){
+                sickHuman.move();
+            }
             if (!sickHuman.isAlive()) {
                 //            logger.foxLog(fox.getInfo());
                 it.remove();
@@ -163,15 +184,17 @@ public class Simulator {
                 it.remove();
                 Field newField = sickHuman.getField();
                 Location newLocation = sickHuman.getLocation();
-                int newAge = sickHuman.getAge();
                 sickHuman.clearPosition();
-                CuredHuman curedHuman = new CuredHuman(newAge, newField, newLocation);
+                CuredHuman curedHuman = new CuredHuman(newAge, newField, newLocation,quarantined);
                 curedHumen.add(curedHuman);
             }
         }
         for (Iterator<CuredHuman> it = curedHumen.iterator(); it.hasNext(); ) {
             CuredHuman curedHuman = it.next();
-            curedHuman.move();
+            if (!curedHuman.isInQuarantine()){
+                curedHuman.move();
+            }
+
         }
 
 
@@ -209,12 +232,18 @@ public class Simulator {
                     field.place(border,row,col);
                 }
                 else if (rand.nextDouble() <= HealthyHumans) {
-                    Location location = new Location(row, col);
-                    HealthyHuman healthyHuman = new HealthyHuman(true, field, location);
-                    healthyHumen.add(healthyHuman);
+                    if((rand.nextDouble()<=InQuarantine)&&(quarantine)){
+                        Location location = new Location(row, col);
+                        HealthyHuman healthyHuman = new HealthyHuman(true, field, location, true);
+                        healthyHumen.add(healthyHuman);
+                    }else{
+                        Location location = new Location(row, col);
+                        HealthyHuman healthyHuman = new HealthyHuman(true, field, location,false);
+                        healthyHumen.add(healthyHuman);
+                    }
                 } else if ((sickHumen.size() < 1) && (rand.nextDouble() <= SickHumans)) {
                     Location location = new Location(row, col);
-                    SickHuman sickHuman = new SickHuman(true, field, location);
+                    SickHuman sickHuman = new SickHuman(true, field, location,false);
                     sickHumen.add(sickHuman);
                 }
                 // else leave the location empty.

@@ -21,8 +21,8 @@ public class CuredHuman extends Human{
      * @param field     The field currently occupied.
      * @param location  The location within the field.
      */
-    public CuredHuman(int Age,Field field, Location location) {
-        super(field, location);
+    public CuredHuman(int Age,Field field, Location location,boolean quarantined) {
+        super(field, location,quarantined);
         age = Age;
     }
 

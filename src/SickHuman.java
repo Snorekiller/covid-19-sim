@@ -27,8 +27,8 @@ public class SickHuman extends Human {
      * @param field     The field currently occupied.
      * @param location  The location within the field.
      */
-    public SickHuman(boolean randomAge, Field field, Location location) {
-        super(field, location);
+    public SickHuman(boolean randomAge, Field field, Location location,boolean quarantined) {
+        super(field, location,quarantined);
         age = 0;
         if (randomAge) {
             age = rand.nextInt(MAX_AGE);
@@ -86,6 +86,8 @@ public class SickHuman extends Human {
         Object human = getField().getObjectAt(where);
         if(human instanceof HealthyHuman){
             HealthyHuman healthyHuman = (HealthyHuman) human;
+
+            healthyHuman.setInQuarantine(healthyHuman.isInQuarantine());
             healthyHuman.setSick();
         }
         newLocation = where;

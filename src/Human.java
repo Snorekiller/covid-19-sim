@@ -11,10 +11,13 @@ public class Human {
 
     protected int age;
 
-    public Human( Field field, Location location)
+    protected boolean isInQuarantine;
+
+    public Human( Field field, Location location, boolean quarantined)
     {
         alive = true;
         this.field = field;
+        isInQuarantine = quarantined;
         setLocation(location);
     }
 
@@ -37,6 +40,14 @@ public class Human {
     public Location getLocation()
     {
         return location;
+    }
+
+    public boolean isInQuarantine() {
+        return isInQuarantine;
+    }
+
+    public void setInQuarantine(boolean inQuarantine) {
+        isInQuarantine = inQuarantine;
     }
 
     /**
