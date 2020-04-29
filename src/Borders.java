@@ -11,4 +11,17 @@ public class Borders {
         }
         location = newLocation;
     }
+    public Location getLocation()
+    {
+        return location;
+    }
+
+    public void clearPosition(){
+        if(location != null) {
+            field.clear(location);
+            location = null;
+            field = null;
+        }
+    }
 }
+

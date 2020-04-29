@@ -1,12 +1,10 @@
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import java.io.IOException;
 import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.awt.Color;
-import java.util.logging.Logger;
 
 /**
  * A simple predator-prey simulator, based on a rectangular field containing
@@ -26,6 +24,10 @@ public class Simulator {
     // The probability that a rabbit will be created in any given position.
     private static final double HealthyHumans = 0.08;
 
+    private static final int BorderPlacement = 15;
+
+    private int BordersRemoved = 1;
+
     // Lists of animals in the field.
     public List<HealthyHuman> healthyHumen;
     public List<SickHuman> sickHumen;
@@ -39,7 +41,7 @@ public class Simulator {
     // A graphical view of the simulation.
     private SimulatorView view;
 
-
+    private int colons;
     // private WriteLogEntriesToLogFile logger;
 
     /**
@@ -109,7 +111,22 @@ public class Simulator {
     public void simulateOneStep() {
         step++;
         //     logger.simulatorStep(Integer.toString(step));
+        if (step ==30* BordersRemoved){
+            BordersRemoved ++;
+            int newcolon = colons/2;
+            int lowerColon = newcolon-BordersRemoved;
+            int upperColon = newcolon+BordersRemoved;
+            for (Iterator<Borders> it = borders.iterator(); it.hasNext(); ){
+                Borders border = it.next();
+                int borderLoc = border.getLocation().getRow();
+                if((lowerColon <borderLoc)&&(borderLoc < upperColon)){
+                    it.remove();
+                    border.clearPosition();
+                }
 
+
+            }
+        }
         // Let all rabbits act.
         for (Iterator<HealthyHuman> it = healthyHumen.iterator(); it.hasNext(); ) {
             HealthyHuman healthyHuman = it.next();
@@ -178,7 +195,7 @@ public class Simulator {
         field.clear();
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
-                if(col == 10){
+                if(col == BorderPlacement){
                     Location location = new Location(row, col);
                     Borders border = new Borders(field,location);
                     borders.add(border);
@@ -196,6 +213,7 @@ public class Simulator {
                 // else leave the location empty.
             }
         }
+        colons = borders.size();
     }
 
     /**
