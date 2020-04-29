@@ -6,7 +6,7 @@ public class Main {
         Simulator simulator = new Simulator();
         simulator.runLongSimulation();
 
-        TimeUnit.SECONDS.sleep(8);//sets delay timer
+        TimeUnit.SECONDS.sleep(100);//sets delay timer
         simulator.reset();
 
     }

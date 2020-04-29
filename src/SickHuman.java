@@ -17,6 +17,8 @@ public class SickHuman extends Human {
     // The human's age.
     public int age;
 
+    public int numberInfectedByThis = 0;
+
     private double chanceOfDeath=0.004;
 
     /**
@@ -86,9 +88,15 @@ public class SickHuman extends Human {
         if(human instanceof HealthyHuman){
             HealthyHuman healthyHuman = (HealthyHuman) human;
             healthyHuman.setSick();
+            numberInfectedByThis++; //for estimating how many it infects
+
         }
         newLocation = where;
+        if(timeSick == 50){
+            System.out.println("Number of affected by this = " + numberInfectedByThis);
+        }
         return newLocation;
+
     }
 
 //    public String getInfo(){

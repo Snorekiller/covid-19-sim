@@ -119,19 +119,29 @@ public class Simulator {
                 SickHuman sickHuman = new SickHuman(false, newField, newLocation);
                 sickHuman.setAge(newAge);
                 sickHumen.add(sickHuman);
+                //view.showStatus(step, field);
+                //delay(100);
+
             }
+            //view.showStatus(step, field);
+            //delay(10);
         }
         for (Iterator<SickHuman> it = sickHumen.iterator(); it.hasNext(); ) {
             SickHuman sickHuman = it.next();
             sickHuman.move();
+
+
             if (!sickHuman.isAlive()) {
                 //            logger.foxLog(fox.getInfo());
                 it.remove();
                 DeadHumans deadHumans = new DeadHumans(sickHuman.getAge());
                 deadHumens.add(deadHumans);
                 view.setDead();
+                //view.showStatus(step, field);
+                //delay(100);
+
             }
-            if(sickHuman.isCured()){
+            if(sickHuman.isCured() && sickHuman.isAlive()){
                 it.remove();
                 Field newField = sickHuman.getField();
                 Location newLocation = sickHuman.getLocation();
@@ -139,11 +149,17 @@ public class Simulator {
                 sickHuman.clearPosition();
                 CuredHuman curedHuman = new CuredHuman(newAge, newField, newLocation);
                 curedHumen.add(curedHuman);
+                //view.showStatus(step, field);
+                //delay(100);
+
             }
         }
         for (Iterator<CuredHuman> it = curedHumen.iterator(); it.hasNext(); ) {
             CuredHuman curedHuman = it.next();
             curedHuman.move();
+            //view.showStatus(step, field);
+            //delay(100);
+
         }
 
 
@@ -151,6 +167,7 @@ public class Simulator {
         //   logger.simulatorLog(Integer.toString(foxes.size()),Integer.toString(rabbits.size()));
 
         view.showStatus(step, field);
+        delay(100);
     }
 
     /**
