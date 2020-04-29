@@ -181,7 +181,11 @@ public class Simulator {
                 deadHumens.add(deadHumans);
                 view.setDead();
             }
+<<<<<<< HEAD
             if((sickHuman.isCured()) && (sickHuman.isAlive())){
+=======
+            if(sickHuman.isCured() && sickHuman.isAlive()){
+>>>>>>> origin/sverre
                 it.remove();
                 Field newField = sickHuman.getField();
                 Location newLocation = sickHuman.getLocation();
